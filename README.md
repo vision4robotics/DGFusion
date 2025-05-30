@@ -31,7 +31,7 @@ The benchmark encompasses 8,700 aligned visible-thermal image pairs, of which 6,
 
 ## 🚀 : How to test
 
-1. Download the pretrained model from [Google Drive]() or [Baidu](https://pan.baidu.com/s/1mUgeZs0wf1K2kAVQCRlSxg?pwd=ivnd) and put it in the `pretrained_model` folder.
+1. Download the pretrained model from [Google Drive]() or [Baidu]([https://pan.baidu.com/s/1mUgeZs0wf1K2kAVQCRlSxg?pwd=ivnd](https://pan.baidu.com/s/1akrP2ymDDNRUCzVqcad9Mg?pwd=stdd )) and put it in the `pretrained_model` folder.
 
 2. Update the paths of image sets and pretrained models.
 
