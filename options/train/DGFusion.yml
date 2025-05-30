@@ -1,0 +1,105 @@
+name: DGFusion
+use_tb_logger: true
+model_type: FusionMaskModel
+scale: 1
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 10
+#### datasets
+
+datasets:
+  train:
+    name: DG
+    type: PairedFusionMaskImageDataset
+    dataroot_gt: F:\Fusion\dataset\Ours\meeting\train\Ir
+    dataroot_lq: F:\Fusion\dataset\Ours\meeting\train\Vis
+    dataroot_mask: F:\Fusion\dataset\Ours\meeting\train\MASK
+
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+      # (for lmdb)
+      # type: lmdb
+
+    gt_size: 128
+    use_flip: true
+    use_rot: true
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 8
+    batch_size_per_gpu: 4
+    dataset_enlarge_ratio: 10
+    prefetch_mode: ~
+
+  val:
+    name: DG
+    type: PairedFusionMaskImageDataset
+    dataroot_gt: F:\Fusion\dataset\Ours\meeting\test\Ir
+    dataroot_lq: F:\Fusion\dataset\Ours\meeting\test\Vis
+    dataroot_mask: F:\Fusion\dataset\Ours\meeting\test\MASK
+
+    io_backend:
+      type: disk
+
+
+#### network structures
+network_g:
+  type: DGFusion
+  channels: 16
+  vischannels: 1
+  irchannels: 1
+
+
+
+#### path
+path:
+  pretrain_network_g: ~
+  strict_load_g: true
+  resume_state: ~
+
+#### training settings: learning rate scheme, loss
+
+train:
+  ema_decay: 0.0
+  optim_g:
+    type: Adam
+    lr: !!float 1e-4
+    weight_decay: 0
+    betas: [0.9, 0.999]
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [15000, 25000]
+    gamma: 0.75
+
+  total_iter: 300000
+  warmup_iter: -1  # no warm up
+  dual: False
+
+  pixel_opt:
+    type: MaskFusionL1loss
+    loss_weight: 3.0
+    reduction: mean
+  max_opt:
+    type: MaxFusionloss
+    loss_weight: 10.0
+    reduction: mean
+  gradient_opt:
+    type: GradientFusionloss
+    loss_weight: 10.0
+    reduction: mean
+
+
+val:
+  val_freq: !!float 20000
+  save_img: true
+  suffix: true
+
+
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 10000
+  use_tb_logger: true
+  wandb:
+    project: ~
+    resume_id: ~

@@ -1,0 +1,34 @@
+name: DGFusion
+model_type: FusionMaskModel
+scale: 1
+num_gpu: 1  # set num_gpu: 0 for cpu mode
+manual_seed: 10
+
+
+datasets:
+  test_1:  # the 1st test dataset
+    name: DG
+    type: PairedFusionMaskImageDataset
+    dataroot_gt: F:\Fusion\dataset\Ours\meeting\test\Ir
+    dataroot_lq: F:\Fusion\dataset\Ours\meeting\test\Vis
+    dataroot_mask: F:\Fusion\dataset\Ours\meeting\test\MASK
+    io_backend:
+      type: disk
+
+
+network_g:
+  type: DGFusion
+  channels: 16
+  vischannels: 1
+  irchannels: 1
+
+
+#### path
+path:
+  pretrain_network_g: F:\Fusion\code\SHIP_main_res_cat\experiments\mi\models\net_g_300000.pth
+  param_key_g: params_ema
+
+val:
+  save_img: true
+  suffix: ~  # add suffix to saved images, if None, use exp name
+
